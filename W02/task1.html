@@ -1,0 +1,40 @@
+<html>
+  <body>
+    <div>
+        <div>Min: <span id="min" /></div>
+        <div>Mid: <span id="mid" /></div>
+        <div>Max: <span id="max" /></div>
+    </div>
+  </body>
+
+  <script>
+    function Vec3(x, y, z) {
+      this.x = x;
+      this.y = y;
+      this.z = z;
+      this.sorted = [x, y, z].sort();
+    }
+
+    Vec3.prototype.min = function() {
+      return this.sorted[0];
+    };
+
+    Vec3.prototype.mid = function() {
+      let sorted = this.sorted;
+      return sorted[Math.floor(sorted.length / 2)];
+    };
+
+    Vec3.prototype.max = function() {
+      let sorted = this.sorted;
+      return sorted[sorted.length - 1];
+    };
+
+    let x = 5,
+      y = 4,
+      z = 8;
+    let v = new Vec3(x, y, z);
+    document.getElementById("min").innerHTML = v.min();
+    document.getElementById("mid").innerHTML = v.mid();
+    document.getElementById("max").innerHTML = v.max();
+  </script>
+</html>
