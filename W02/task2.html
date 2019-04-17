@@ -3,6 +3,11 @@
     input {
       margin: 1.5%;
       width: 30%;
+      border-radius: 3px;
+      border: 1px solid #ddd;
+    }
+    span {
+      margin: 1.5%;
     }
     .container {
       display: flex;
@@ -20,18 +25,21 @@
   <body>
     <div>
       <div class="container">
+        <span>A: </span>
         <input type="text" placeholder="x" id="v0x" value="-5" />
         <input type="text" placeholder="y" id="v0y" value="5" />
         <input type="text" placeholder="z" id="v0z" value="-5" />
       </div>
 
       <div class="container">
+        <span>B: </span>
         <input type="text" placeholder="x" id="v1x" value="1" />
         <input type="text" placeholder="y" id="v1y" value="-6" />
         <input type="text" placeholder="z" id="v1z" value="6" />
       </div>
 
       <div class="container">
+        <span>C: </span>
         <input type="text" placeholder="x" id="v2x" value="2" />
         <input type="text" placeholder="y" id="v2y" value="-3" />
         <input type="text" placeholder="z" id="v2z" value="4" />
