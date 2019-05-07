@@ -2,6 +2,9 @@
 
 This repository is for Information Visualization class
 
+## Assets
+ https://sites.google.com/view/kobeinfovis2019/
+
 ## Homepage
  https://worachatsun.github.io/InfoVis2019/
  
