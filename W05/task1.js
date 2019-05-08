@@ -15,12 +15,12 @@ const asstes = [
   { face: [0, 3, 2], color: 0x00bfff },
   { face: [1, 2, 5], color: 0xcc6600 }, //brown
   { face: [2, 5, 6], color: 0xb35900 },
-  { face: [1, 5, 0], color: 0x1a1a1a }, //black
-  { face: [0, 5, 4], color: 0x333333 },
+  { face: [1, 5, 0], color: 0xff751a }, //orange
+  { face: [0, 5, 4], color: 0xff8533 },
   { face: [0, 3, 4], color: 0x00b300 }, //green
   { face: [3, 4, 7], color: 0x00cc00 },
-  { face: [2, 3, 7], color: 0xff751a }, //orange
-  { face: [2, 6, 7], color: 0xff8533 },
+  { face: [2, 3, 7], color: 0x1a1a1a }, //black
+  { face: [2, 6, 7], color: 0x333333 },
   { face: [4, 5, 7], color: 0xb300b3 }, //purple
   { face: [5, 6, 7], color: 0xe600e6 }
 ];
