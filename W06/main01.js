@@ -24,8 +24,8 @@ function main() {
 
   var material_lam = new THREE.ShaderMaterial({
     vertexColors: THREE.VertexColors,
-    vertexShader: document.getElementById("shader.vert.lam").text,
-    fragmentShader: document.getElementById("shader.frag").text,
+    vertexShader: document.getElementById("gouraud.vert.lam").text,
+    fragmentShader: document.getElementById("gouraud.frag").text,
     uniforms: {
       light_position: { type: "v3", value: light.position }
     }
@@ -33,8 +33,8 @@ function main() {
 
   var material_phong = new THREE.ShaderMaterial({
     vertexColors: THREE.VertexColors,
-    vertexShader: document.getElementById("shader.vert.phong").text,
-    fragmentShader: document.getElementById("shader.frag").text,
+    vertexShader: document.getElementById("gouraud.vert.phong").text,
+    fragmentShader: document.getElementById("gouraud.frag").text,
     uniforms: {
       light_position: { type: "v3", value: light.position },
       camera_position: { type: "v3", value: camera.position }
