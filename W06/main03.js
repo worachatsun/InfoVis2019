@@ -9,7 +9,7 @@ function main() {
   var near = 1;
   var far = 1000;
   var camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
-  camera.position.set(0, 0, 5);
+  camera.position.set(0, 0, 7);
   scene.add(camera);
 
   var light = new THREE.PointLight();
@@ -23,12 +23,15 @@ function main() {
 
   var geometry = new THREE.TorusKnotGeometry(1, 0.3, 100, 20);
 
+  geometry.faces.map(face => (face.color = new THREE.Color(0xff0000)));
+
   var material_phong = new THREE.ShaderMaterial({
     vertexColors: THREE.VertexColors,
     vertexShader: document.getElementById("shader.vert").text,
     fragmentShader: document.getElementById("shader.frag.phong").text,
     uniforms: {
-      light_position: { type: "v3", value: light.position }
+      light_position: { type: "v3", value: light.position },
+      camera_position: { type: "v3", value: camera.position }
     }
   });
 

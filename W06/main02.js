@@ -37,7 +37,8 @@ function main() {
     vertexShader: document.getElementById("shader.vert").text,
     fragmentShader: document.getElementById("shader.frag.phong").text,
     uniforms: {
-      light_position: { type: "v3", value: light.position }
+      light_position: { type: "v3", value: light.position },
+      camera_position: { type: "v3", value: camera.position }
     }
   });
 
