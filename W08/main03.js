@@ -77,8 +77,8 @@ function main() {
     var face = new THREE.Face3(id[0], id[1], id[2]);
     geometry.faces.push(face);
   }
-  lut.setMax(scalars[id[2]]);
-  lut.setMin(scalars[id[0]]);
+  lut.setMin(Math.min(...scalars));
+  lut.setMax(Math.max(...scalars));
   // Assign colors for each vertex
   material.vertexColors = THREE.VertexColors;
   for (var i = 0; i < nfaces; i++) {
@@ -86,8 +86,6 @@ function main() {
     var S0 = scalars[id[0]];
     var S1 = scalars[id[1]];
     var S2 = scalars[id[2]];
-    console.log(cmap);
-    console.log(scalars[id[3]]);
     var C0 = lut.getColor(S0);
     var C1 = lut.getColor(S1);
     var C2 = lut.getColor(S2);
