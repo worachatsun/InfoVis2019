@@ -15,6 +15,9 @@ function main() {
   var surfaces = Isosurfaces(volume, isovalue, screen.camera, screen.light);
   screen.scene.add(surfaces);
 
+  let slice = Slice(volume);
+  screen.scene.add(slice);
+
   document.addEventListener("mousemove", function() {
     screen.light.position.copy(screen.camera.position);
   });
