@@ -23,7 +23,7 @@ function main() {
 
   var geometry = new THREE.TorusKnotGeometry(1, 0.3, 100, 20);
 
-  geometry.faces.map(face => (face.color = new THREE.Color(0xff0000)));
+  geometry.faces.map(face => (face.color = new THREE.Color(0xffffff)));
 
   var material_phong = new THREE.ShaderMaterial({
     vertexColors: THREE.VertexColors,
