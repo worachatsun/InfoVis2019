@@ -1,18 +1,29 @@
-function Isosurfaces(volume, isovalue, camera, light) {
+function Isosurfaces(volume) {
   var geometry = new THREE.Geometry();
-  let material = new THREE.ShaderMaterial({
+  let material = new THREE.MeshBasicMaterial({
     vertexColors: THREE.VertexColors,
-    vertexShader: document.getElementById("shader.vert").text,
-    fragmentShader: document.getElementById("shader.frag").text,
-    uniforms: {
-      light_position: { type: "v3", value: light.position },
-      camera_position: { type: "v3", value: camera.position }
-    }
+    side: THREE.DoubleSide
   });
 
-  var smin = volume.min_value;
-  var smax = volume.max_value;
-  isovalue = KVS.Clamp(isovalue, smin, smax);
+  var sq_dimension = {
+    a: 5.0,
+    b: 0.0,
+    c: -40.3,
+    d: 200.0
+  };
+
+  var cmap = [];
+  for (var i = 0; i < 256; i++) {
+    var S = i / 256; // [0,1]
+    var R = Math.max(Math.cos((S - 1.0) * Math.PI), 0.0);
+    var G = Math.max(Math.cos((S - 0.5) * Math.PI), 0.0);
+    var B = Math.max(Math.cos(S * Math.PI), 0.0);
+    var color = new THREE.Color(R, G, B);
+    cmap.push(color);
+  }
+
+  var lines = volume.resolution.x;
+  var slices = volume.resolution.x * volume.resolution.y;
 
   var lut = new KVS.MarchingCubesTable();
   var cell_index = 0;
@@ -20,8 +31,8 @@ function Isosurfaces(volume, isovalue, camera, light) {
   for (var z = 0; z < volume.resolution.z - 1; z++) {
     for (var y = 0; y < volume.resolution.y - 1; y++) {
       for (var x = 0; x < volume.resolution.x - 1; x++) {
-        var indices = cell_node_indices(cell_index++);
-        var index = table_index(indices);
+        // var indices = cell_node_indices(cell_index++);
+        var index = table_index(x, y, z);
         if (index == 0) {
           continue;
         }
@@ -48,9 +59,9 @@ function Isosurfaces(volume, isovalue, camera, light) {
           var v4 = new THREE.Vector3(x + vid4[0], y + vid4[1], z + vid4[2]);
           var v5 = new THREE.Vector3(x + vid5[0], y + vid5[1], z + vid5[2]);
 
-          var v01 = interpolated_vertex(v0, v1, isovalue);
-          var v23 = interpolated_vertex(v2, v3, isovalue);
-          var v45 = interpolated_vertex(v4, v5, isovalue);
+          var v01 = interpolated_vertex(v0, v1);
+          var v23 = interpolated_vertex(v2, v3);
+          var v45 = interpolated_vertex(v4, v5);
 
           geometry.vertices.push(v01);
           geometry.vertices.push(v23);
@@ -60,7 +71,13 @@ function Isosurfaces(volume, isovalue, camera, light) {
           var id1 = counter++;
           var id2 = counter++;
 
-          geometry.faces.push(new THREE.Face3(id0, id1, id2));
+          var { C01, C23, C45 } = color_creater();
+
+          var face = new THREE.Face3(id0, id1, id2);
+          face.vertexColors.push(C01);
+          face.vertexColors.push(C23);
+          face.vertexColors.push(C45);
+          geometry.faces.push(face);
         }
       }
       cell_index++;
@@ -70,96 +87,88 @@ function Isosurfaces(volume, isovalue, camera, light) {
 
   geometry.computeVertexNormals();
 
-  var cmap = [];
-  for (var i = 0; i < geometry.faces.length; i++) {
-    var S = i / geometry.faces.length; // [0,1]
-    var R = Math.max(Math.cos((S - 1.0) * Math.PI), 0.0);
-    var G = Math.max(Math.cos((S - 0.5) * Math.PI), 0.0);
-    var B = Math.max(Math.cos(S * Math.PI), 0.0);
-    var color = new THREE.Color(R, G, B);
-    cmap.push([S, "0x" + color.getHexString()]);
-  }
-
-  // material.color = new THREE.Color("white");
   material.vertexColors = THREE.VertexColors;
-  for (var i = 0; i < geometry.faces.length; i++) {
-    var C0 = new THREE.Color().setHex(cmap[i][1]);
-    var C1 = new THREE.Color().setHex(cmap[i][1]);
-    var C2 = new THREE.Color().setHex(cmap[cmap.length - 1][1]);
-    geometry.faces[i].vertexColors.push(C0);
-    geometry.faces[i].vertexColors.push(C1);
-    geometry.faces[i].vertexColors.push(C2);
-  }
 
   return new THREE.Mesh(geometry, material);
 
-  function cell_node_indices(cell_index) {
-    var lines = volume.resolution.x;
-    var slices = volume.resolution.x * volume.resolution.y;
-
-    var id0 = cell_index;
-    var id1 = id0 + 1;
-    var id2 = id1 + lines;
-    var id3 = id0 + lines;
-    var id4 = id0 + slices;
-    var id5 = id1 + slices;
-    var id6 = id2 + slices;
-    var id7 = id3 + slices;
-
-    return [id0, id1, id2, id3, id4, id5, id6, id7];
-  }
-
-  function table_index(indices) {
-    var s0 = volume.values[indices[0]][0];
-    var s1 = volume.values[indices[1]][0];
-    var s2 = volume.values[indices[2]][0];
-    var s3 = volume.values[indices[3]][0];
-    var s4 = volume.values[indices[4]][0];
-    var s5 = volume.values[indices[5]][0];
-    var s6 = volume.values[indices[6]][0];
-    var s7 = volume.values[indices[7]][0];
+  function table_index(x, y, z) {
+    var s0 = plane(x, y, z, sq_dimension);
+    var s1 = plane(x + 1, y, z, sq_dimension);
+    var s2 = plane(x + 1, y + 1, z, sq_dimension);
+    var s3 = plane(x, y + 1, z, sq_dimension);
+    var s4 = plane(x, y, z + 1, sq_dimension);
+    var s5 = plane(x + 1, y, z + 1, sq_dimension);
+    var s6 = plane(x + 1, y + 1, z + 1, sq_dimension);
+    var s7 = plane(x, y + 1, z + 1, sq_dimension);
 
     var index = 0;
-    if (s0 > isovalue) {
+    if (s0 > 0) {
       index |= 1;
     }
-    if (s1 > isovalue) {
+    if (s1 > 0) {
       index |= 2;
     }
-    if (s2 > isovalue) {
+    if (s2 > 0) {
       index |= 4;
     }
-    if (s3 > isovalue) {
+    if (s3 > 0) {
       index |= 8;
     }
-    if (s4 > isovalue) {
+    if (s4 > 0) {
       index |= 16;
     }
-    if (s5 > isovalue) {
+    if (s5 > 0) {
       index |= 32;
     }
-    if (s6 > isovalue) {
+    if (s6 > 0) {
       index |= 64;
     }
-    if (s7 > isovalue) {
+    if (s7 > 0) {
       index |= 128;
     }
 
     return index;
   }
 
-  function interpolated_vertex(v0, v1, s) {
-    let lines = volume.resolution.x;
-    let slices = volume.resolution.x * volume.resolution.y;
-    let x0 = v0.x + v0.y * lines + v0.z * slices;
-    let x1 = v1.x + v1.y * lines + v1.z * slices;
-    t =
-      (s - volume.values[x0][0]) /
-      (volume.values[x1][0] - volume.values[x0][0]);
-
-    return new THREE.Vector3().addVectors(
-      v0.multiplyScalar(1 - t),
-      v1.multiplyScalar(t)
+  function interpolated_vertex(v0, v1) {
+    let plane0 = plane(v0.x, v0.y, v0.z, sq_dimension);
+    let t = plane0 / (plane0 - plane(v1.x, v1.y, v1.z, sq_dimension));
+    return new THREE.Vector3(
+      v0.x * (1 - t) + v1.x * t,
+      v0.y * (1 - t) + v1.y * t,
+      v0.z * (1 - t) + v1.z * t
     );
+  }
+
+  function plane(x, y, z, dimen) {
+    let { a, b, c, d } = dimen;
+    return a * x + b * y + c * z + d;
+  }
+
+  function color_creater() {
+    var s0 = volume.values[v0.x + v0.y * lines + v0.z * slices];
+    var s1 = volume.values[v1.x + v1.y * lines + v1.z * slices];
+    var s2 = volume.values[v2.x + v2.y * lines + v2.z * slices];
+    var s3 = volume.values[v3.x + v3.y * lines + v3.z * slices];
+    var s4 = volume.values[v4.x + v4.y * lines + v4.z * slices];
+    var s5 = volume.values[v5.x + v5.y * lines + v5.z * slices];
+
+    return {
+      C01: new THREE.Color(
+        cmap[s0].r + cmap[s1].r,
+        cmap[s0].g + cmap[s1].g,
+        cmap[s0].b + cmap[s1].b
+      ),
+      C23: new THREE.Color(
+        cmap[s2].r + cmap[s3].r,
+        cmap[s2].g + cmap[s3].g,
+        cmap[s2].b + cmap[s3].b
+      ),
+      C45: new THREE.Color(
+        cmap[s4].r + cmap[s5].r,
+        cmap[s4].g + cmap[s5].g,
+        cmap[s4].b + cmap[s5].b
+      )
+    };
   }
 }

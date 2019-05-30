@@ -11,12 +11,8 @@ function main() {
   var bounds = Bounds(volume);
   screen.scene.add(bounds);
 
-  var isovalue = 128;
-  var surfaces = Isosurfaces(volume, isovalue, screen.camera, screen.light);
+  var surfaces = Isosurfaces(volume);
   screen.scene.add(surfaces);
-
-  let slice_plane = Slice(volume);
-  screen.scene.add(slice_plane);
 
   document.addEventListener("mousemove", function() {
     screen.light.position.copy(screen.camera.position);
