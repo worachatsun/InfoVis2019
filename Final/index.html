@@ -9,6 +9,7 @@
     />
     <script src="Plane/Isosurfaces.js"></script>
     <script src="Plane/Bounds.js"></script>
+    <script src="foot.js"></script>
     <script src="https://threejs.org/build/three.min.js"></script>
     <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.light_green-lime.min.css" />
     <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
@@ -297,7 +298,7 @@
       <header class="mdl-layout__header">
         <div class="mdl-layout__header-row">
           <!-- Title -->
-          <span class="mdl-layout-title">Lobster</span>
+          <span class="mdl-layout-title">Lobster & Tornado</span>
           <!-- Add spacer, to align navigation to the right -->
           <div class="mdl-layout-spacer"></div>
         </div>
@@ -306,8 +307,11 @@
         <div class="page-content">
             <div class="container">
                 <div class="mdl-card__supporting-text">
-                    This is the dataset from KVS. I choose lobster data that have resolution 120x120x34 in json file.
-                    This is a scalar volumn data with size 1.5 MB in js file and 2.44 MB in json file.
+                    This is the dataset from KVS. I choose Lobster and Tornado data that have resolution 120x120x34 in json file.
+                    Lobster is a scalar volumn data with size 1.5 MB in js file and 2.44 MB in json file. Tornado is a Vector volume data resolution 64x64x64.
+                    I also convert foot raw data into foot.js to make it easy to use by import the input
+                    data into the visualization process to get the data that easy to use. I getting from https://klacansky.com/open-scivis-datasets/.
+                    The resolution and size of visualize is 256x256x256 (16.0 MB)
                   </div>
               <div class="section">
                 <div
@@ -394,24 +398,56 @@
             
                 <div class="section">
                   <div class="demo-card-wide mdl-card mdl-shadow--2dp explain">
-                      <div class="slide">
-                        <input
-                          class="mdl-slider mdl-js-slider"
-                          type="range"
-                            min="0"
-                            max="1"
-                            step="0.01"
-                            value="0.5"
-                            id="isovalue"
-                        />
-                        <button
-                          id="change-isovalue-button"
-                          class="mdl-button mdl-js-button mdl-button--primary"
-                        >
-                            <label id="label" style="font-family:Arial;">Isovalue: 128</label>
-                            apply
-                        </button>
-                      </div>
+                  <div class="slide">
+                    <input
+                      class="mdl-slider mdl-js-slider"
+                      type="range"
+                        min="1"
+                        max="63"
+                        step="0.5"
+                        value="31.5"
+                        id="sl_x"
+                    />
+                    <label id="label_x" style="font-family:Arial;">X: 31.5</label>
+                  </div>
+                  <div class="slide">
+                    <input
+                      class="mdl-slider mdl-js-slider"
+                      type="range"
+                        min="1"
+                        max="63"
+                        step="0.5"
+                        value="31.5"
+                        id="sl_y"
+                    />
+                    <label id="label_y" style="font-family:Arial;">Y: 31.5</label>
+                  </div>
+                  <div class="slide">
+                    <input
+                      class="mdl-slider mdl-js-slider"
+                      type="range"
+                        min="1"
+                        max="63"
+                        step="0.5"
+                        value="31.5"
+                        id="sl_z"
+                    />
+                    <label id="label_z" style="font-family:Arial;">Z: 31.5</label>
+                  </div>
+                  <button
+                      id="change"
+                      class="mdl-button mdl-js-button mdl-button--primary"
+                    >
+                        <label id="label_c" style="font-family:Arial;">APPLY</label>
+                    </button>
+                  <div class="mdl-card__actions mdl-card--border"></div>
+                      <div class="mdl-card__title">
+                      <h2 class="mdl-card__title-text">Streamline</h2>
+                    </div>
+                    <div class="mdl-card__supporting-text">
+                      This is an Tornado visulization using Streamline technique. And you can add more line by apply seed point 
+                      in X, Y, Z dimensions on this value.
+                    </div>
                     </div>
                     <div
                     id="lob_stream"
@@ -432,10 +468,12 @@
     <script src="https://naohisas.github.io/KVS.js/Source/KVSLobsterData.js"></script>
     <script src="https://naohisas.github.io/KVS.js/Source/KVSSingleCubeData.js"></script>
     <script src="isosurface.js"></script>
+    <script src="stramline.js"></script>
     <script src="Plane/main_plane.js"></script>
     <script>
       main()
       main_plane()
+      main_streamline()
     </script>
   </body>
 </html>

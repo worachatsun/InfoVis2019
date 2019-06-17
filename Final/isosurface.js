@@ -1,5 +1,6 @@
 function main() {
   var volume = new KVS.LobsterData();
+  var foot_volumn = new Foot();
   var screen = new KVS.THREEScreen();
   var screen2 = new KVS.THREEScreen();
   var screen3 = new KVS.THREEScreen();
@@ -19,17 +20,17 @@ function main() {
     enableAutoResize: false
   });
 
-  screen3.init(volume, {
-    width: window.innerWidth * 0.6,
-    height: 500,
-    targetDom: document.getElementById("lob_stream"),
-    enableAutoResize: false
-  });
+  // screen3.init(volume, {
+  //   width: window.innerWidth * 0.6,
+  //   height: 500,
+  //   targetDom: document.getElementById("lob_stream"),
+  //   enableAutoResize: false
+  // });
 
   setup();
   screen.loop();
   screen2.loop();
-  screen3.loop();
+  // screen3.loop();
 
   function setup() {
     var color = new KVS.Vec3(0, 0, 0);
@@ -70,6 +71,12 @@ function main() {
     );
     screen2.scene.add(line.clone());
     screen2.scene.add(mesh2);
+
+    // mesh3 = KVS.ToTHREEMesh(
+    //   isosurface.exec(foot_volumn)
+    // );
+    // screen3.scene.add(line.clone());
+    // screen3.scene.add(mesh3);
 
     document
       .getElementById("isovalue")
@@ -134,18 +141,18 @@ function main() {
     document.addEventListener("mousemove", function() {
       screen.light.position.copy(screen.camera.position);
       screen2.light.position.copy(screen.camera.position);
-      screen3.light.position.copy(screen.camera.position);
+      // screen3.light.position.copy(screen.camera.position);
     });
 
     window.addEventListener("resize", function() {
       screen.resize([window.innerWidth * 0.8, window.innerHeight]);
       screen2.resize([window.innerWidth * 0.8, window.innerHeight]);
-      screen3.resize([window.innerWidth * 0.8, window.innerHeight]);
+      // screen3.resize([window.innerWidth * 0.8, window.innerHeight]);
     });
 
     screen.draw();
     screen2.draw();
-    screen3.draw();
+    // screen3.draw();
   }
 }
 
