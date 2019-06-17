@@ -71,19 +71,6 @@ function main() {
     screen2.scene.add(line.clone());
     screen2.scene.add(mesh2);
 
-    var seed_point = volume.objectCenter();
-    var streamline = new KVS.Streamline();
-    streamline.setIntegrationStepLength(0.5);
-    streamline.setIntegrationTime(500);
-    streamline.setIntegrationMethod(KVS.RungeKutta4);
-    streamline.setIntegrationDirection(KVS.ForwardDirection);
-    streamline.setLineWidth(5);
-    streamline.setSeedPoint(seed_point);
-    var line1 = KVS.ToTHREELine(box.exec(volume));
-    var line2 = KVS.ToTHREELine(streamline.exec(volume));
-    screen3.scene.add(line1);
-    screen3.scene.add(line2);
-
     document
       .getElementById("isovalue")
       .addEventListener("mousemove", function() {
