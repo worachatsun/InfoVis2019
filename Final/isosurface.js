@@ -92,7 +92,7 @@ function main() {
       .addEventListener("mousemove", function() {
         var value = +document.getElementById("isovalue_volumn").value;
         var isovalue = KVS.Mix(smin, smax, value);
-        document.getElementById("label").innerHTML =
+        document.getElementById("label_p").innerHTML =
           "Isovalue: " + Math.round(isovalue);
       });
 
