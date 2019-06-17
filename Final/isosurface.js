@@ -94,6 +94,15 @@ function main() {
       });
 
     document
+      .getElementById("isovalue_volumn")
+      .addEventListener("mousemove", function() {
+        var value = +document.getElementById("isovalue_volumn").value;
+        var isovalue = KVS.Mix(smin, smax, value);
+        document.getElementById("label").innerHTML =
+          "Isovalue: " + Math.round(isovalue);
+      });
+
+    document
       .getElementById("change-isovalue-button")
       .addEventListener("click", function() {
         screen.scene.remove(mesh);
@@ -112,6 +121,27 @@ function main() {
           phongMaterial(light, camera)
         );
         screen.scene.add(mesh);
+      });
+
+    document
+      .getElementById("change-isovalue-button_volumn")
+      .addEventListener("click", function() {
+        screen.scene.remove(mesh2);
+        var value = +document.getElementById("isovalue_volumn").value;
+        var isovalue = KVS.Mix(smin, smax, value);
+        var isosurface = Isosurfaces(
+          volume,
+          isovalue,
+          screen.camera,
+          screen.light
+        );
+        var isosurface = new KVS.Isosurface();
+        isosurface.setIsovalue(isovalue);
+        mesh2 = KVS.ToTHREEMesh(
+          isosurface.exec(volume),
+          raycasterMaterial(screen2, volume)
+        );
+        screen2.scene.add(mesh2);
       });
 
     document.addEventListener("mousemove", function() {
