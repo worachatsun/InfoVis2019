@@ -29,4 +29,5 @@ https://worachatsun.github.io/InfoVis2019/
 [Week 9, Task 1](https://worachatsun.github.io/InfoVis2019/W09/task1.html)  
 [Week 9, Task 2](https://worachatsun.github.io/InfoVis2019/W09/task2.html)  
 [Week 9, Task 3](https://worachatsun.github.io/InfoVis2019/W09/task3.html)  
-[Week 9, Task 4](https://worachatsun.github.io/InfoVis2019/W09/task4.html)
+[Week 9, Task 4](https://worachatsun.github.io/InfoVis2019/W09/task4.html)  
+[Final task](https://worachatsun.github.io/InfoVis2019/Final/index.html)
